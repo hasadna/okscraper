@@ -1,6 +1,11 @@
 import re
 
 class BaseSource():
+    """Abstract BaseSource
+        extending classes must implement a fetch method which returns the data
+    """
+
+class BaseStringParamsSource():
 
     def __init__(self, source_string):
         self._source_string = source_string
@@ -15,10 +20,10 @@ class BaseSource():
             src = src.replace('<<{}>>'.format(identifier), str(arg))
         return self._fetch(src)
 
-class UrlSource(BaseSource):
+class UrlSource(BaseStringParamsSource):
     pass
 
-class FileSource(BaseSource):
+class FileSource(BaseStringParamsSource):
 
     def _fetch(self, filepath):
         with file(filepath) as f:
