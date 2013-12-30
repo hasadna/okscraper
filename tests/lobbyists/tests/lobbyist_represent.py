@@ -1,24 +1,34 @@
-from base import BaseScraper
-from sources import UrlSource
-from storages import ListStorage
-from bs4 import BeautifulSoup
+# encoding: utf-8
 
-class LobbyistRepresentScraper(BaseScraper):
+from base import ParsingFromFileTestCase
+from tests.lobbyists.lobbyist_represent import LobbyistRepresentScraper
 
-    source = UrlSource('http://online.knesset.gov.il/WsinternetSps/KnessetDataService/LobbyistData.svc/View_lobbyist(<<id>>)/lobbist_type')
-    storage = ListStorage()
+class testLobbyistRepresentScraper(ParsingFromFileTestCase):
 
-    def _storeLobbyistRepresentDataFromSoup(self, soup):
-        for elt in soup.findAll('content'):
-            represent = {}
-            represent['id'] = elt.find('d:lobbyist_represent_id').text.strip()
-            represent['lobbyist_id'] = elt.find('d:lobbyist_id').text.strip()
-            represent['name'] = elt.find('d:lobbyist_represent_name').text.strip()
-            represent['domain'] = elt.find('d:lobbyist_represent_domain').text.strip()
-            represent['type'] = elt.find('d:lobbyist_represent_type').text.strip()
-            self.storage.store(represent)
+    maxDiff = None
 
-    def _scrape(self, lobbyist_id):
-        html = self.source.fetch(lobbyist_id)
-        soup = BeautifulSoup(html)
-        return self._storeLobbyistRepresentDataFromSoup(soup)
+    def _getScraperClass(self):
+        return LobbyistRepresentScraper
+
+    def _getFilename(self):
+        return 'lobbist_type_<<id>>.xml'
+
+    def testParsing(self):
+        self.assertScrape(
+            args=(220,),
+            expectedData=[
+                {
+                    'domain': u'איכות הסביבה, בריאות הציבור, בטיחות בדרכים',
+                    'id': u'6954817',
+                    'lobbyist_id': u'220',
+                    'name': u'ישראל בשביל אופניים',
+                    'type': u'קבוע',
+                },{
+                    'id': u'6954818',
+                    'lobbyist_id': u'220',
+                    'name': u'אופנים בשביל ירושלים',
+                    'type': u'קבוע',
+                    'domain': u'תחבורה, התחדשות עירונית, בטיחות בדרכים',
+                }
+            ]
+        )

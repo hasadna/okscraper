@@ -5,8 +5,9 @@ from bs4 import BeautifulSoup
 
 class LobbyistRepresentScraper(BaseScraper):
 
-    source = UrlSource('http://online.knesset.gov.il/WsinternetSps/KnessetDataService/LobbyistData.svc/View_lobbyist(<<id>>)/lobbist_type')
-    storage = ListStorage()
+    def __init__(self):
+        self.source = UrlSource('http://online.knesset.gov.il/WsinternetSps/KnessetDataService/LobbyistData.svc/View_lobbyist(<<id>>)/lobbist_type')
+        self.storage = ListStorage()
 
     def _storeLobbyistRepresentDataFromSoup(self, soup):
         for elt in soup.findAll('content'):

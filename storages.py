@@ -11,7 +11,8 @@ class BaseStorage():
 
 class DictStorage(BaseStorage):
 
-    _data = {}
+    def __init__(self):
+        self._data = {}
 
     def store(self, key, value):
         self._data[key] = value
@@ -24,7 +25,8 @@ class DictStorage(BaseStorage):
 
 class ListStorage(BaseStorage):
 
-    _data = []
+    def __init__(self):
+        self._data = []
 
     def store(self, value):
         self._data.append(value)

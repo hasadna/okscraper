@@ -5,8 +5,9 @@ from bs4 import BeautifulSoup
 
 class LobbyistsIndexScraper(BaseScraper):
 
-    source = UrlSource('http://www.knesset.gov.il/lobbyist/heb/lobbyist.aspx')
-    storage = ListStorage()
+    def __init__(self):
+        self.source = UrlSource('http://www.knesset.gov.il/lobbyist/heb/lobbyist.aspx')
+        self.storage = ListStorage()
 
     def _storeLobbyistIdsFromSoup(self, soup):
         elts = soup.findAll(lobbyist_id=True)
