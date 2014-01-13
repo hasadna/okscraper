@@ -1,13 +1,14 @@
 from unittest import TestCase
-from sources import FileSource
-import os, inspect, unittest
+import os
+import inspect
+import logging
 
-class BaseScraper:
+class BaseScraper(object):
     """Abstract Scraper class - should be extended by concrete scraper objects
 
         You must declare the following:
 
-        def __init__(self):
+        def __init__(self, *args, **kwargs):
             self.source = (an object derived from a class based on okscraper.sources.BaseSource)
             self.storage = (an object derived from a class based on okscraper.storages.BaseStorage)
 
@@ -17,9 +18,13 @@ class BaseScraper:
     def _scrape(self):
         raise Exception('_scrape method must be implemented by extending classes')
 
+    def _getLogger(self):
+        return logging.getLogger(self.__class__.__module__+'('+self.__class__.__name__+')')
+
     def scrape(self, *args, **kwargs):
         self._scrape(*args, **kwargs)
         self.storage.commit()
+        return self.storage.get()
 
 class ParsingFromFileTestCase(TestCase):
     """base class for testing scrapers with input from a file
@@ -55,6 +60,7 @@ class ParsingFromFileTestCase(TestCase):
         return os.path.join(os.path.abspath(os.path.dirname(_file_)), 'data')
 
     def _getSource(self):
+        from okscraper.sources import FileSource
         return FileSource(os.path.join(self._getDataDir(), self._getFilename()))
 
     def _getStorageClass(self):

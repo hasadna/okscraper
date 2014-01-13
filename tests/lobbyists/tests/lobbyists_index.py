@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-from base import ParsingFromFileTestCase
+from okscraper.base import ParsingFromFileTestCase
 from tests.lobbyists.lobbyists_index import LobbyistsIndexScraper
 
 class testLobbyistsIndexScraper(ParsingFromFileTestCase):

@@ -1,7 +1,8 @@
-from base import BaseScraper
-from sources import UrlSource
-from storages import DictStorage
 from bs4 import BeautifulSoup
+
+from okscraper.base import BaseScraper
+from okscraper.sources import UrlSource
+from okscraper.storages import DictStorage
 
 class LobbyistScraper(BaseScraper):
 
@@ -10,7 +11,9 @@ class LobbyistScraper(BaseScraper):
         self.storage = DictStorage()
 
     def _storeLobbyistDataFromSoup(self, soup):
-        self.storage.store('id', soup.find('d:lobbyist_id').text.strip())
+        lobbyist_id = soup.find('d:lobbyist_id').text.strip()
+        self._getLogger().info('got lobbyist id "%s"', lobbyist_id)
+        self.storage.store('id', lobbyist_id)
         self.storage.store('first_name', soup.find('d:first_name').text.strip())
         self.storage.store('family_name', soup.find('d:family_name').text.strip())
         self.storage.store('profession', soup.find('d:profession').text.strip())

@@ -1,11 +1,11 @@
-import re
+import re, urllib2
 
-class BaseSource():
+class BaseSource(object):
     """Abstract BaseSource
         extending classes must implement a fetch method which returns the data
     """
 
-class BaseStringParamsSource():
+class BaseStringParamsSource(BaseSource):
 
     def __init__(self, source_string):
         self._source_string = source_string
@@ -21,10 +21,18 @@ class BaseStringParamsSource():
         return self._fetch(src)
 
 class UrlSource(BaseStringParamsSource):
-    pass
+    def _fetch(selfself, url):
+        return urllib2.urlopen(url).read()
 
 class FileSource(BaseStringParamsSource):
-
     def _fetch(self, filepath):
         with file(filepath) as f:
             return f.read()
+
+class ScraperSource(BaseSource):
+
+    def __init__(self, scraper):
+        self._scraper = scraper
+
+    def fetch(self, *args, **kwargs):
+        return self._scraper.scrape(*args, **kwargs)
