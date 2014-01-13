@@ -9,5 +9,5 @@ setup(
     license='GPLv3',
     url='https://github.com/orihoch/okscraper',
     packages=['okscraper'],
-    scripts=['scripts/okscrape']
+    scripts=['okscrape']
 )
