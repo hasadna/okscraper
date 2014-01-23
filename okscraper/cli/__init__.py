@@ -4,11 +4,34 @@ import importlib
 import logging
 
 def run(args):
-    logging.basicConfig(level=logging.DEBUG)
-    if len(args) >= 2:
+    if len(args) > 0:
         module = importlib.import_module(args[0])
-        scraperClass = getattr(module, args[1])
-        scraper = scraperClass()
-        scraper.scrape(*args[2:])
-    else:
-        raise Exception('invalid args')
+        runScraperClassName = None
+        scraperArgs = args[1:]
+        if 'okscrapers' in dir(module):
+            scraperClasses = module.okscrapers
+            scraperClassNames = [scraperClass.__name__ for scraperClass in scraperClasses]
+            if len(args) > 1:
+                if args[1] in scraperClassNames:
+                    runScraperClassName = args[1]
+                    scraperArgs = args[2:]
+        elif len(args) > 1:
+            runScraperClassName = args[1]
+            scraperArgs = args[2:]
+        else:
+            raise InvalidArgsException('invalid args')
+        if runScraperClassName is None:
+            if 'default_okscrapers' in dir(module):
+                runScraperClasses = module.default_okscrapers
+            else:
+                runScraperClasses = module.okscrapers
+        else:
+            scraperClass = getattr(module, args[1])
+            runScraperClasses = (scraperClass,)
+        for scraperClass in runScraperClasses:
+            logging.getLogger('okscraper.cli').info('running scraper class %s with args %s' % (scraperClass.__name__, scraperArgs,))
+            scraper = scraperClass()
+            scraper.scrape(*scraperArgs)
+
+class InvalidArgsException(Exception):
+    pass

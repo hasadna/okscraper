@@ -64,6 +64,10 @@ class DictStorage(DataBasedStorage):
     def assertEquals(self, testCase, expected_data):
         testCase.assertDictEqual(self._data, expected_data)
 
+    def storeDict(self, data):
+        for key in data:
+            self.store(key, data[key])
+
 class ListStorage(DataBasedStorage):
 
     def _getEmptyData(self):
