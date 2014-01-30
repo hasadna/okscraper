@@ -17,16 +17,20 @@ class BaseStorage(object):
 
 class DataBasedStorage(BaseStorage):
 
+    # commitInterval of -1 puts the object into single-commit mode
+    # in this mode there can be only one! (commit)
+    _commitInterval = 20
+
     def __init__(self):
-        self._commitInterval = 20
         self._storeCounter = 0
         self._data = self._getEmptyData()
         self._tmpData = self._getEmptyData()
+        self._isCommitted = False
 
     def _getEmptyData(self):
         raise Exception('_getEmptyData needs to be implemented by extending classes')
 
-    def _addValueToData(self, data):
+    def _addValueToData(self, data, *args, **kwargs):
         raise Exception('_addValueToData needs to be implemented by extending classes')
 
     def _addDataToData(self, targetData, sourceData):
@@ -35,16 +39,21 @@ class DataBasedStorage(BaseStorage):
     def store(self, *args, **kwargs):
         self._addValueToData(self._tmpData, *args, **kwargs)
         self._storeCounter = self._storeCounter + 1
-        if self._storeCounter > self._commitInterval:
+        if self._commitInterval > -1 and self._storeCounter > self._commitInterval:
             self.commit()
 
     def commit(self):
-        self._addDataToData(self._data, self._tmpData)
-        self._storeCounter = 0
-        self._tmpData = self._getEmptyData()
+        if self._isCommitted and self._commitInterval == -1:
+            raise Exception('if commitInterval is -1 then only one commit is allowed')
+        else:
+            self._isCommitted = True
+            self._addDataToData(self._data, self._tmpData)
+            self._storeCounter = 0
+            self._tmpData = self._getEmptyData()
 
     def get(self):
-        self.commit()
+        if self._commitInterval > -1 or not self._isCommitted:
+            self.commit()
         return self._data
 
 class DictStorage(DataBasedStorage):

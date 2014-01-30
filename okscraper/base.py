@@ -15,7 +15,10 @@ class BaseScraper(object):
         def _scrape(self):
             # here you do the actual scraping based on source and storing to storage
     """
-    def _scrape(self):
+    def __init__(self, *args, **kwargs):
+        pass
+
+    def _scrape(self, *args, **kwargs):
         raise Exception('_scrape method must be implemented by extending classes')
 
     def _getLogger(self):
@@ -57,7 +60,7 @@ class ParsingFromFileTestCase(TestCase):
 
     def _getDataDir(self):
         _file_ = inspect.getfile(self.__class__)
-        return os.path.join(os.path.abspath(os.path.dirname(_file_)), 'data')
+        return os.path.join(os.path.abspath(os.path.dirname(_file_)), 'testdata')
 
     def _getSource(self):
         from okscraper.sources import FileSource

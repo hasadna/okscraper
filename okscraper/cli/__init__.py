@@ -27,11 +27,13 @@ def run(args):
                 runScraperClasses = module.okscrapers
         else:
             scraperClass = getattr(module, args[1])
-            runScraperClasses = (scraperClass,)
+            runScraperClasses = [scraperClass]
         for scraperClass in runScraperClasses:
             logging.getLogger('okscraper.cli').info('running scraper class %s with args %s' % (scraperClass.__name__, scraperArgs,))
             scraper = scraperClass()
             scraper.scrape(*scraperArgs)
+    else:
+        raise InvalidArgsException('invalid args')
 
 class InvalidArgsException(Exception):
     pass
