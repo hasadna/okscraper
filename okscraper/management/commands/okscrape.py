@@ -1,29 +1,34 @@
 # encoding: utf-8
 
 from django.core.management.base import BaseCommand
-from optparse import make_option
-from okscraper.cli import run, InvalidArgsException
-import sys, logging
+from okscraper.cli.runner import Runner as OkscraperCliRunner
+import logging
 
 class Command(BaseCommand):
 
-    args = 'module class args*'
+    args = 'module [class] [arg]..'
 
     option_list = BaseCommand.option_list + ()
 
-    def handle(self, *args, **options):
-        verbosity = options.get('verbosity', '1')
+    def _define_logger(self, verbosity):
+        logger = logging.getLogger()
+        ch = logging.StreamHandler()
         if verbosity == '1':
-            logging.basicConfig(level=logging.WARN)
+            level = logging.WARN
         elif verbosity == '2':
-            logging.basicConfig(level=logging.INFO)
+            level = logging.INFO
         elif verbosity == '3':
-            logging.basicConfig(level=logging.DEBUG)
+            level = logging.DEBUG
         else:
-            logging.basicConfig(level=logging.ERROR)
+            level = logging.ERROR
+        ch.setLevel(level)
+        logger.addHandler(ch)
 
-        try:
-            run(args)
-        except InvalidArgsException:
-            print "Invalid arguments\n"
-            self.print_help('manage.py', 'okscraper')
+    def handle(self, *args, **options):
+        self._define_logger(options.get('verbosity', '1'))
+        runner = OkscraperCliRunner(
+            args[0],
+            args[1] if len(args)>1 else None,
+            *args[2:] if len(args)>2 else []
+        )
+        runner.run()

@@ -8,6 +8,5 @@ setup(
     author_email='ori@uumpa.com',
     license='GPLv3',
     url='https://github.com/orihoch/okscraper',
-    packages=['okscraper'],
-    scripts=['okscrape']
+    packages=['okscraper']
 )
