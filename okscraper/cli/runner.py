@@ -24,4 +24,4 @@ class Runner(object):
         module = importlib.import_module('%s.scrapers' % self._module_name)
         scraperClass = getattr(module, self._scraper_class_name)
         scraper = scraperClass()
-        scraper.scrape(*self._args, **self._kwargs)
+        return scraper.scrape(*self._args, **self._kwargs)
