@@ -1,4 +1,4 @@
-from distutils.core import setup
+from setuptools import setup, find_packages
 
 setup(
     name='okscraper',
@@ -7,6 +7,6 @@ setup(
     author='Ori Hoch',
     author_email='ori@uumpa.com',
     license='GPLv3',
-    url='https://github.com/orihoch/okscraper',
-    packages=['okscraper']
+    url='https://github.com/hasadna/okscraper',
+    packages=find_packages(exclude=['tests', 'tests.*'])
 )
