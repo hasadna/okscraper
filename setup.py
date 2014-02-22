@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='okscraper',
-    version='0.0.2',
+    version='0.0.3',
     description='module for scraping websites and documents',
     author='Ori Hoch',
     author_email='ori@uumpa.com',
