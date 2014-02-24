@@ -42,6 +42,7 @@ class DummyScraper(BaseScraper):
     def _scrape(self):
         self.storage.store(self.source.fetch())
 
+
 class MainScraper(DummyScraper):
 
     def _getTitle(self):
@@ -55,3 +56,18 @@ class OtherScraper(MainScraper):
 
     def _getTitle(self):
         return 'OtherScraper'
+
+
+class LoggingScraper(MainScraper):
+
+    def _getTitle(self):
+        self._getLogger().info('_getTitle')
+        return 'LoggingScraper'
+
+    def _scrape(self, *args, **kwargs):
+        if 'test_logs' in kwargs:
+            for log in kwargs.pop('test_logs'):
+                self._getLogger().log(log['level'], log['msg'])
+        if 'fake_error' in kwargs:
+            xxx()
+        super(LoggingScraper, self)._scrape(*args, **kwargs)

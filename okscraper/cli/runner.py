@@ -1,6 +1,8 @@
 # encoding: utf-8
 
 import importlib
+import logging
+import traceback
 
 class Runner(object):
     """
@@ -19,9 +21,74 @@ class Runner(object):
         self._scraper_class_name = scraper_class_name
         self._args = args
         self._kwargs = kwargs
+        self.post_init()
+
+    def post_init(self):
+        pass
+
+    def post_run(self):
+        pass
 
     def run(self):
-        module = importlib.import_module('%s.scrapers' % self._module_name)
-        scraperClass = getattr(module, self._scraper_class_name)
-        scraper = scraperClass()
-        return scraper.scrape(*self._args, **self._kwargs)
+        try:
+            module = importlib.import_module('%s.scrapers' % self._module_name)
+            scraperClass = getattr(module, self._scraper_class_name)
+            scraper = scraperClass()
+            result = scraper.scrape(*self._args, **self._kwargs)
+        finally:
+            self.post_run()
+        return result
+
+
+class LogRunner(Runner):
+
+    def _getLogLevelFromVerbosity(self, verbosity):
+        verbosities = {
+            '1': logging.WARN,
+            '2': logging.INFO,
+            '3': logging.DEBUG
+        }
+        return verbosities.get(str(verbosity), logging.ERROR)
+
+    def __init__(self, *args, **kwargs):
+        if 'log_handler' in kwargs:
+            logger = logging.getLogger()
+            logger.setLevel(logging.DEBUG)
+            handler = kwargs.pop('log_handler')
+            if 'log_verbosity' in kwargs:
+                level = self._getLogLevelFromVerbosity(kwargs.pop('log_verbosity'))
+                handler.setLevel(level)
+            logger.addHandler(handler)
+        super(LogRunner, self).__init__(*args, **kwargs)
+
+    def run(self):
+        try:
+            return super(LogRunner, self).run()
+        except:
+            exc = traceback.format_exc()
+            logging.getLogger(self.__class__.__module__+'('+self.__class__.__name__+')').exception(exc)
+            return None
+
+
+class _DbLogHandler(logging.Handler):
+
+    def __init__(self, *args, **kwargs):
+        self.log_runner = kwargs.pop('log_runner')
+        super(_DbLogHandler, self).__init__(*args, **kwargs)
+
+    def emit(self, record):
+        self.log_runner.on_dblog_emit(record)
+
+
+class DbLogRunner(LogRunner):
+
+    def __init__(self, *args, **kwargs):
+        logger = logging.getLogger()
+        logger.setLevel(logging.DEBUG)
+        handler = _DbLogHandler(log_runner=self)
+        handler.setLevel(logging.INFO)
+        logger.addHandler(handler)
+        super(DbLogRunner, self).__init__(*args, **kwargs)
+
+    def on_dblog_emit(self, record):
+        raise Exception('on_dblog_emit must be implemented by extending classes')
