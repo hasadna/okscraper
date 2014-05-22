@@ -1,10 +1,11 @@
 
 class BaseStorage(object):
-    """Abstract class
-        implementing classes must define the following methods:
-        store - store data
-        commit - (optional, commit the data)
-        get - (optioanl, return stored data or pointer to stored data)
+    """
+        Abstract class, implementing classes must define the following methods:
+        
+        * store - store data
+        * commit - (optional, commit the data)
+        * get - (optioanl, return stored data or pointer to stored data)
     """
     def store(self):
         raise Exception('store must be implemented by extending classes')
@@ -16,6 +17,7 @@ class BaseStorage(object):
         return None
 
 class DataBasedStorage(BaseStorage):
+    """Base storage for the DictStorage and ListStorage - should not be used directly"""
 
     # commitInterval of -1 puts the object into single-commit mode
     # in this mode there can be only one! (commit)
@@ -57,6 +59,7 @@ class DataBasedStorage(BaseStorage):
         return self._data
 
 class DictStorage(DataBasedStorage):
+    """Storage to store dict data"""
 
     def _getEmptyData(self):
         return {}
@@ -78,6 +81,7 @@ class DictStorage(DataBasedStorage):
             self.store(key, data[key])
 
 class ListStorage(DataBasedStorage):
+    """Storage to store list data"""
 
     def _getEmptyData(self):
         return []

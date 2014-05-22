@@ -6,11 +6,16 @@ import traceback
 
 class Runner(object):
     """
-    Provide functionality for running a scraper from the command line
+    Provides functionality for running a scraper from the command line
+    
     it gets a module_name and looks for a scrapers module under that module name
+    
     e.g. if module_name = lobbyists then the scrapers module is under lobbyists.scrapers
-    it them looks for a MainScraper class in that module and scrapes that class
+    
+    it then looks for a MainScraper class in that module and scrapes that class
+    
     alternatively - if scraper_class_name is provided it uses that scraper class
+    
     also - you can pass arbitrary args and kwargs which are passed to the scraper
     """
 
@@ -41,6 +46,7 @@ class Runner(object):
 
 
 class LogRunner(Runner):
+    """Adds logging capabilities to the Runner class"""
 
     def _getLogLevelFromVerbosity(self, verbosity):
         verbosities = {
@@ -81,6 +87,7 @@ class _DbLogHandler(logging.Handler):
 
 
 class DbLogRunner(LogRunner):
+    """Adds capabilities relevant to db logging to the LogRunner class"""
 
     def __init__(self, *args, **kwargs):
         logger = logging.getLogger()
