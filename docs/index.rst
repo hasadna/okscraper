@@ -9,4 +9,5 @@ If you are using django you should also check out okscraper-django which provide
     :maxdepth: 2
     
     intro
+    contribute
     reference
