@@ -4,16 +4,17 @@ import inspect
 import logging
 
 class BaseScraper(object):
-    """Abstract Scraper class - should be extended by concrete scraper objects
+    """
+        Abstract Scraper class - should be extended by concrete scraper objects
 
-        You must declare the following:
+        You must declare the following::
 
-        def __init__(self, *args, **kwargs):
-            self.source = (an object derived from a class based on okscraper.sources.BaseSource)
-            self.storage = (an object derived from a class based on okscraper.storages.BaseStorage)
+            def __init__(self, *args, **kwargs):
+                self.source = (an object derived from a class based on okscraper.sources.BaseSource)
+                self.storage = (an object derived from a class based on okscraper.storages.BaseStorage)
 
-        def _scrape(self):
-            # here you do the actual scraping based on source and storing to storage
+            def _scrape(self):
+                # here you do the actual scraping based on source and storing to storage
     """
     def __init__(self, *args, **kwargs):
         pass
@@ -30,22 +31,24 @@ class BaseScraper(object):
         return self.storage.get()
 
 class ParsingFromFileTestCase(TestCase):
-    """base class for testing scrapers with input from a file
-    minimal implementation sample:
+    """
+        base class for testing scrapers with input from a file
+        
+        minimal implementation sample::
 
-    class MyScraperTestCase(ParsingFromFileTestCase):
-        def _getScraperClass(self):
-            return MyScraper
+            class MyScraperTestCase(ParsingFromFileTestCase):
+                def _getScraperClass(self):
+                    return MyScraper
 
-        def _getFilename(self):
-            # this is a file containing test data
-            return 'my_data_<<id>>.xml'
+                def _getFilename(self):
+                    # this is a file containing test data
+                    return 'my_data_<<id>>.xml'
 
-        def testParsing(self):
-            self.assertScrape(
-                args=(220),
-                expectedData={'id': 220, 'name':'Hello World',}
-            )
+                def testParsing(self):
+                    self.assertScrape(
+                        args=(220),
+                        expectedData={'id': 220, 'name':'Hello World',}
+                    )
     """
 
     def _getScraperClass(self):

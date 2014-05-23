@@ -5,42 +5,22 @@ okscraper.base
 --------------
 
 .. automodule:: okscraper.base
-
-.. autoclass:: BaseScraper
-
-.. autoclass:: ParsingFromFileTestCase
+    :members: BaseScraper, ParsingFromFileTestCase
 
 okscraper.storages
 ------------------
 
 .. automodule:: okscraper.storages
-
-.. autoclass:: BaseStorage
-
-.. autoclass:: DictStorage
-
-.. autoclass:: ListStorage
+    :members: BaseStorage, DictStorage, ListStorage
 
 okscraper.sources
 -----------------
 
 .. automodule:: okscraper.sources
-
-.. autoclass:: BaseSource
-
-.. autoclass:: UrlSource
-
-.. autoclass:: FileSource
-
-.. autoclass:: ScraperSource
+    :members: BaseSource, UrlSource, FileSource, ScraperSource
 
 okscraper.cli.runner
 --------------------
 
 .. automodule:: okscraper.cli.runner
-
-.. autoclass:: Runner
-
-.. autoclass:: LogRunner
-
-.. autoclass:: DbLogRunner
+    :members: Runner, LogRunner, DbLogRunner
