@@ -12,7 +12,7 @@ class BaseStringParamsSource(BaseSource):
     def __init__(self, source_string):
         self._source_string = source_string
 
-    def fetch(self, *args, **kwargs):
+    def get_source_string(self, *args, **kwargs):
         args = list(args)
         src = self._source_string
         identifiers = re.findall(r"<<(\w*)>>", src)
@@ -20,7 +20,10 @@ class BaseStringParamsSource(BaseSource):
             identifier = identifiers.pop(0)
             arg = args.pop(0)
             src = src.replace('<<{}>>'.format(identifier), str(arg))
-        return self._fetch(src)
+        return src
+
+    def fetch(self, *args, **kwargs):
+        return self._fetch(self.get_source_string(*args, **kwargs))
 
 class UrlSource(BaseStringParamsSource):
     """fetch data from a url"""
