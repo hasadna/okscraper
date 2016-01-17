@@ -4,4 +4,4 @@ python:
 install:
   - pip install .
 script:
-  - python -m unittest discover -s okscraper/tests
+  - run_tests.sh
