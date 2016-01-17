@@ -24,6 +24,9 @@ class Runner(object):
             scraper_class_name = 'MainScraper'
         self._module_name = module_name
         self._scraper_class_name = scraper_class_name
+        if 'extra_scraper_args' in kwargs:
+            args += tuple(kwargs['extra_scraper_args'])
+            del kwargs['extra_scraper_args']
         self._args = args
         self._kwargs = kwargs
         self.post_init()
@@ -39,7 +42,14 @@ class Runner(object):
             module = importlib.import_module('%s.scrapers' % self._module_name)
             scraperClass = getattr(module, self._scraper_class_name)
             scraper = scraperClass()
-            result = scraper.scrape(*self._args, **self._kwargs)
+            if len(self._kwargs) > 0 and len(self._args) > 0:
+                result = scraper.scrape(*self._args, **self._kwargs)
+            elif len(self._args) > 0:
+                result = scraper.scrape(*self._args)
+            elif len(self._kwargs) > 0:
+                result = scraper.scrape(**self._kwargs)
+            else:
+                result = scraper.scrape()
         finally:
             self.post_run()
         return result
