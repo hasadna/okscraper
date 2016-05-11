@@ -23,7 +23,7 @@ class DummyStorage(BaseStorage):
         return DummyStorage
 
     def assertEquals(self, testCase, expected_data):
-        testCase.assertEquals(self._val, expected_data)
+        testCase.assertEqual(self._val, expected_data)
 
 class DummySource(BaseSource):
 
