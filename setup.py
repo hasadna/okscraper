@@ -9,5 +9,6 @@ setup(
     author_email='ori@uumpa.com',
     license='GPLv3',
     url='https://github.com/hasadna/okscraper',
-    packages=find_packages(exclude=['tests', 'tests.*'])
+    packages=find_packages(exclude=['tests', 'tests.*']),
+    install_requires=['requests']
 )

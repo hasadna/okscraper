@@ -1,4 +1,4 @@
-import re, urllib2
+import re, requests
 
 class BaseSource(object):
     """
@@ -22,18 +22,21 @@ class BaseStringParamsSource(BaseSource):
             src = src.replace('<<{}>>'.format(identifier), str(arg))
         return src
 
+    def _fetch(self, *args, **kwargs):
+        raise NotImplementedError()
+
     def fetch(self, *args, **kwargs):
         return self._fetch(self.get_source_string(*args, **kwargs))
 
 class UrlSource(BaseStringParamsSource):
     """fetch data from a url"""
-    def _fetch(selfself, url):
-        return urllib2.urlopen(url).read()
+    def _fetch(self, url):
+        return requests.get(url).text
 
 class FileSource(BaseStringParamsSource):
     """fetch data from a file"""
     def _fetch(self, filepath):
-        with file(filepath) as f:
+        with open(filepath) as f:
             return f.read()
 
 class ScraperSource(BaseSource):
